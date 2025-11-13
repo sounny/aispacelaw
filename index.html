@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI, Policy, Ethics & Space Law Poster</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html { scroll-behavior: smooth; }
+      body { font-family: Calibri, Arial, sans-serif; }
+      body.modal-open { overflow: hidden; }
+      @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0px); } }
+      .animate-float { animation: float 6s ease-in-out infinite; }
+      @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      @keyframes twinkle { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+      @keyframes sun-glow { 0%, 100% { box-shadow: 0 0 25px rgba(220, 220, 220, 0.5), 0 0 40px rgba(220, 220, 0.3); } 50% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 255, 0.6); } }
+      .animate-sun-glow { animation: sun-glow 5s ease-in-out infinite; }
+      .orbit-trail::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1px dashed rgba(255, 255, 255, 0.15); pointer-events: none; }
+      .orbit-trail::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 90deg, transparent, rgba(100, 255, 255, 0.4) 90deg, transparent 91deg); -webkit-mask-image: radial-gradient(transparent calc(50% - 2px), white calc(50% - 2px), white 50%, transparent 50%); mask-image: radial-gradient(transparent calc(50% - 2px), white calc(50% - 2px), white 50%, transparent 50%); pointer-events: none; }
+      @keyframes pulse-bounce { 0%, 100% { transform: scale(1) translateY(0); box-shadow: 0 5px 15px rgba(8, 145, 178, 0.4), 0 0 0 0 rgba(8, 145, 178, 0.4); } 50% { transform: scale(1.05) translateY(-8px); box-shadow: 0 10px 25px rgba(8, 145, 178, 0.6), 0 0 20px 4px rgba(8, 145, 178, 0.3); } }
+      .animate-pulse-bounce { animation: pulse-bounce 2.5s ease-in-out infinite; }
+      @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+      
+      .solution-orbit-trail::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1px dashed rgba(103, 232, 249, 0.1); }
+      @keyframes pop-bounce { 0%, 100% { transform: scale(1) translateY(0); } 50% { transform: scale(1.05) translateY(-8px); } }
+      .animate-pop-bounce { animation: pop-bounce 2.5s ease-in-out infinite; }
+      @keyframes fade-in-scale { to { opacity: 1; transform: scale(1); } }
+      .animate-fade-in-scale { animation: fade-in-scale 0.3s forwards; }
+
+      @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      .animate-spin-slow { animation: spin-slow 60s linear infinite; }
+      
+      @keyframes pulse-glow { 0%, 100% { opacity: 0.6; stroke-width: 2px; } 50% { opacity: 1; stroke-width: 4px; } }
+      .animate-photon-ring { animation: pulse-glow 4s ease-in-out infinite; }
+      @keyframes hover-float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
+      
+      .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(34, 211, 238, 0.3) rgba(0,0,0,0.2);
+      }
+      .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.3); border-radius: 10px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.5); }
+      
+      .collapsible-content {
+        display: grid;
+        grid-template-rows: 0fr;
+        opacity: 0;
+        transition: grid-template-rows 0.5s ease-out, opacity 0.5s ease-out;
+      }
+      .collapsible-content.expanded {
+        grid-template-rows: 1fr;
+        opacity: 1;
+      }
+      .collapsible-content > div {
+        overflow: hidden;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-black">
+    <div id="root">
+      <div class="relative min-h-screen overflow-x-hidden text-white bg-black">
+        <div id="animated-background" class="fixed inset-0 z-0 bg-gradient-to-b from-[#0c0a1d] to-[#1d1a39] overflow-hidden"></div>
+        
+        <main class="relative z-10 flex flex-col items-center">
+          <header class="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden p-4 text-center">
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-transparent to-cyan-900/40 opacity-75"></div>
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.1%22%20fill-rule%3D%22evenodd%22%3E%3Cpath%20d%3D%22M0%200h40v40H0V0zm20%2020v20h20V20H20z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-50"></div>
+            
+            <div class="relative z-10">
+              <h1 class="text-[36px] font-bold tracking-tighter text-transparent sm:text-[48px] md:text-[60px] bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400 leading-tight">
+                AI, Policy, Ethics & Space Law
+              </h1>
+              <p class="mt-2 max-w-3xl text-base text-gray-300 sm:text-lg">
+                Navigating the Final Frontier of Artificial Intelligence Governance
+              </p>
+            </div>
+          </header>
+          
+          <div class="flex flex-col items-center w-full p-4 sm:p-8">
+  
+              <section class="w-full max-w-4xl my-16 text-center">
+                <div class="space-y-8 text-[18px] text-gray-300 leading-relaxed">
+                    <p>The story of exploration has always been human. But as we push further into the cosmos, artificial intelligence is beginning to take the pilot’s seat.</p>
+                    <p>AI systems now guide rovers across Martian plains, monitor satellite constellations, and even make critical decisions in deep space—faster than any human ever could.</p>
+                    <p>Yet, somewhere between code and consciousness, a question arises:</p>
+                </div>
+
+                <div class="my-12">
+                    <div class="w-full h-1 mx-auto bg-gradient-to-r from-transparent via-cyan-400 to-transparent" style="max-width: 80%;"></div>
+                    <h2 class="py-6 text-[28px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">
+                        Who decides what’s right when no one is there to decide?
+                    </h2>
+                    <div class="w-full h-1 mx-auto bg-gradient-to-r from-transparent via-cyan-400 to-transparent" style="max-width: 80%;"></div>
+                </div>
+
+                <p class="text-[18px] text-gray-300 leading-relaxed">
+                    This poster explores how AI autonomy is reshaping space exploration, exposing legal and ethical gaps in our current frameworks, and asking what responsibility means when intelligence is no longer human.
+                </p>
+              </section>
+  
+              <div class="w-full max-w-4xl space-y-16">
+                
+                <section id="problem-grid-section" class="w-full">
+                  <div class="flex flex-col items-center gap-4 mb-16 text-center">
+                    <div class="w-16 h-16 text-cyan-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>
+                    </div>
+                    <h2 class="text-[24px] font-bold text-transparent sm:text-[28px] bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">
+                      The Problem: Autonomous Risks
+                    </h2>
+                    <p class="max-w-2xl mt-1 text-gray-400 text-base">Four critical challenges orbiting the future of AI in space operations.</p>
+                  </div>
+
+                  <div class="flex flex-col items-center justify-center p-8 my-8 text-center border border-purple-500/20 bg-black/30 backdrop-blur-md rounded-xl shadow-lg shadow-purple-500/10">
+                      <p class="max-w-xl mb-8 text-lg text-gray-300">
+                          The rise of AI in space introduces unprecedented capabilities but also significant risks. From liability gaps in autonomous operations to the potential for runaway surveillance, these challenges demand careful consideration.
+                      </p>
+                      <button id="explore-risks-btn" class="px-8 py-3 font-bold text-white uppercase transition-all duration-300 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg shadow-lg hover:from-cyan-400 hover:to-purple-500 hover:shadow-cyan-500/50 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-cyan-400 animate-pulse-bounce" aria-label="Explore AI risks in space">
+                          Explore Risks
+                      </button>
+                  </div>
+              
+                  <div id="problem-content-container" class="collapsible-content"></div>
+                </section>
+  
+                <div id="loading-spinner" class="flex flex-col items-center justify-center p-8">
+                  <div class="relative w-20 h-20">
+                    <div class="absolute inset-0 bg-cyan-400 rounded-full opacity-75 animate-ping"></div>
+                    <div class="relative flex items-center justify-center w-full h-full bg-purple-500 rounded-full">
+                      <div class="w-8 h-8 bg-cyan-200 rounded-full shadow-2xl shadow-white"></div>
+                    </div>
+                  </div>
+                </div>
+  
+                <div id="error-message-container" class="hidden p-4 text-center text-amber-300 bg-amber-900/50 rounded-xl max-w-4xl w-full"></div>
+
+                <div id="main-content-container" class="hidden w-full max-w-4xl space-y-16">
+                    <section id="gaps-diagram-section-container"></section>
+                    <section id="solution-solar-system-section-container"></section>
+                    <section id="policy-framework-section-container"></section>
+                    <section id="implementation-section-container"></section>
+                </div>
+              </div>
+          </div>
+          
+          <div id="bottom-content-container" class="hidden flex flex-col items-center w-full">
+            <div class="w-full">
+                 <section id="next-steps-section-container"></section>
+            </div>
+            <section id="references-section-container" class="relative w-full py-16 border-t border-white/5 bg-black">
+            </section>
+          </div>
+
+        </main>
+        <div id="modal-root"></div>
+      </div>
+    </div>
+    <script src="/config.js"></script>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
