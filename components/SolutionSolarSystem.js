@@ -1,7 +1,8 @@
-import { Solution } from '../types';
-import { problemsData } from './ProblemGrid';
+import { problemsData } from './ProblemGrid.js';
 
-function showSolutionModal(solution: Solution, modalRoot: HTMLElement) {
+function showSolutionModal(solution, modalRoot) {
+    if (!modalRoot) return;
+
     let contentHTML = '';
     const solutionImages = ['./assets/Image_17.png', './assets/Image_18.png', './assets/Image_17.png', './assets/Image_18.png']; // Placeholder reuse for 4 items
 
@@ -40,14 +41,16 @@ function showSolutionModal(solution: Solution, modalRoot: HTMLElement) {
     modalRoot.innerHTML = modalHTML;
     document.body.classList.add('modal-open');
 
-    const modal = modalRoot.querySelector('[role="dialog"]') as HTMLElement;
+    const modal = modalRoot.querySelector('[role="dialog"]');
+    if (!modal) return;
+
     const focusableElements = Array.from(modal.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )) as HTMLElement[];
+    ));
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
-    const handleFocusTrap = (e: KeyboardEvent) => {
+    const handleFocusTrap = (e) => {
         if (e.key !== 'Tab') return;
         if (e.shiftKey) {
             if (document.activeElement === firstElement) {
@@ -61,7 +64,7 @@ function showSolutionModal(solution: Solution, modalRoot: HTMLElement) {
             }
         }
     };
-    const handleEscape = (e: KeyboardEvent) => { if (e.key === 'Escape') closeModal(); };
+    const handleEscape = (e) => { if (e.key === 'Escape') closeModal(); };
 
     const closeModal = () => {
         modal.removeEventListener('keydown', handleFocusTrap);
@@ -75,11 +78,13 @@ function showSolutionModal(solution: Solution, modalRoot: HTMLElement) {
 
     firstElement?.focus();
     
-    modal.querySelector('.close-modal-btn').addEventListener('click', closeModal);
-    modal.querySelector('.modal-bg').addEventListener('click', closeModal);
+    modal.querySelector('.close-modal-btn')?.addEventListener('click', closeModal);
+    modal.querySelector('.modal-bg')?.addEventListener('click', closeModal);
 }
 
-export function renderSolutionSolarSystem(container: HTMLElement, modalRoot: HTMLElement, solutions: Solution[]) {
+export function renderSolutionSolarSystem(container, modalRoot, solutions) {
+    if (!container || !modalRoot || !Array.isArray(solutions)) return;
+
     let isSolutionsExplored = false;
     
     const introHTML = `
@@ -177,22 +182,24 @@ export function renderSolutionSolarSystem(container: HTMLElement, modalRoot: HTM
         </div>
     `;
 
+    if (!solutionsDiagramContent) return;
+
     solutionsDiagramContent.innerHTML = `<div>${diagramHTML}${mobileGridHTML}</div>`;
 
     solutionsDiagramContent.querySelectorAll('[data-index]').forEach(el => {
         el.addEventListener('click', (e) => {
             e.stopPropagation();
-            const index = parseInt((el as HTMLElement).dataset.index);
+            const index = parseInt(el.dataset.index, 10);
             showSolutionModal(solutions[index], modalRoot);
         });
     });
-    
+
     let showAllSolutions = false;
     const solutionSun = solutionsDiagramContent.querySelector('#solution-sun');
     const solutionTooltipsContainer = solutionsDiagramContent.querySelector('#solution-grid-tooltips');
-    const solutionTooltips = solutionTooltipsContainer.querySelectorAll(':scope > div');
+    const solutionTooltips = solutionTooltipsContainer ? solutionTooltipsContainer.querySelectorAll(':scope > div') : [];
 
-    if(solutionSun) {
+    if(solutionSun && solutionTooltipsContainer) {
         solutionSun.addEventListener('click', () => {
             showAllSolutions = !showAllSolutions;
             solutionTooltipsContainer.classList.toggle('invisible', !showAllSolutions);

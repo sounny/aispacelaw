@@ -1,13 +1,13 @@
-import { GapTopic } from '../types';
-
-function parseBoldText(text: string) {
+function parseBoldText(text) {
     return text.split('**').map((part, index) => 
         index % 2 === 1 ? `<strong>${part}</strong>` : part
     ).join('');
 }
 
-function handleSegmentClick(topic: GapTopic, modalRoot: HTMLElement) {
-    let detailsContent: string;
+function handleSegmentClick(topic, modalRoot) {
+    if (!modalRoot) return;
+
+    let detailsContent = '';
     
     if (topic.title.includes('Outer Space Treaty')) {
         const treatyContent = [
@@ -53,7 +53,7 @@ function handleSegmentClick(topic: GapTopic, modalRoot: HTMLElement) {
                 </div>
             </div>`).join('')}</div>`;
     } else if (topic.title.includes('Current Laws')) {
-        const agencyLogoMap: { [key: string]: string } = {
+        const agencyLogoMap = {
             'NASA': './assets/Image_10.png',
             'ESA': './assets/Image_11.png',
             'DLR': './assets/Image_12.jpeg'
@@ -119,14 +119,16 @@ function handleSegmentClick(topic: GapTopic, modalRoot: HTMLElement) {
     modalRoot.innerHTML = modalHTML;
     document.body.classList.add('modal-open');
     
-    const modal = modalRoot.querySelector('[role="dialog"]') as HTMLElement;
+    const modal = modalRoot.querySelector('[role="dialog"]');
+    if (!modal) return;
+
     const focusableElements = Array.from(modal.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )) as HTMLElement[];
+    ));
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
-    const handleFocusTrap = (e: KeyboardEvent) => {
+    const handleFocusTrap = (e) => {
         if (e.key !== 'Tab') return;
         if (e.shiftKey) {
             if (document.activeElement === firstElement) {
@@ -140,7 +142,7 @@ function handleSegmentClick(topic: GapTopic, modalRoot: HTMLElement) {
             }
         }
     };
-    const handleEscape = (e: KeyboardEvent) => { if (e.key === 'Escape') closeModal(); };
+    const handleEscape = (e) => { if (e.key === 'Escape') closeModal(); };
 
     const closeModal = () => {
         modal.removeEventListener('keydown', handleFocusTrap);
@@ -159,7 +161,7 @@ function handleSegmentClick(topic: GapTopic, modalRoot: HTMLElement) {
 }
 
 
-export function renderGapsDiagram(container: HTMLElement, modalRoot: HTMLElement, topics: GapTopic[]) {
+export function renderGapsDiagram(container, modalRoot, topics) {
     let isGapsExplored = false;
 
     const introHTML = `
@@ -197,9 +199,9 @@ export function renderGapsDiagram(container: HTMLElement, modalRoot: HTMLElement
         topics.find(t => t.title.includes('Outer Space Treaty')),
         topics.find(t => t.title.includes('Current Laws')),
         topics.find(t => t.title.includes('Current uses of AI')),
-    ].filter(Boolean) as GapTopic[];
+    ].filter(Boolean);
 
-    function getLines(title: string) {
+    function getLines(title) {
       if (title.includes('Outer Space Treaty')) return ['Outer Space', 'Treaty (1967)'];
       if (title.includes('Current Laws')) return ['Current Laws', '& Guidelines'];
       if (title.includes('Current uses')) return ['Current Uses', 'of AI'];
@@ -272,7 +274,7 @@ export function renderGapsDiagram(container: HTMLElement, modalRoot: HTMLElement
     
     gapsDiagramContent.querySelectorAll('[data-index]').forEach(el => {
         el.addEventListener('click', () => {
-            const index = parseInt((el as HTMLElement).dataset.index);
+            const index = parseInt(el.dataset.index, 10);
             handleSegmentClick(orderedTopics[index], modalRoot);
         });
     });

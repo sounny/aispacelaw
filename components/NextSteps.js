@@ -1,4 +1,4 @@
-export function renderNextSteps(container: HTMLElement) {
+export function renderNextSteps(container) {
     const contentHTML = `
         <div class="relative w-full py-24 overflow-hidden">
             <div class="absolute inset-0 z-0 pointer-events-none">
