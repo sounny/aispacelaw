@@ -1,17 +1,15 @@
-import { Problem } from '../types';
-
-export const problemsData: Problem[] = [
+export const problemsData = [
     { title: '1. The “Liability Black Hole”', description: '• As AI systems take over critical tasks like autonomous rendezvous and docking, accidents—such as satellite collisions or failed docking maneuvers—can occur without clear human oversight.\n• Current space law struggles to assign responsibility for these incidents.\n• This creates a “liability gap,” leaving victims without justice and letting bad actors evade accountability.\n (Bratu et al., 2021; Martin & Freeland, 2021; Pagallo et al., 2023).' },
     { title: '2. Security Threats "Gravity"', description: '• AI systems in space are vulnerable to cyberattacks, manipulation, and data breaches.\n• Consequences: These vulnerabilities can severely impact space assets and terrestrial infrastructure.\n• For example: A cyberattack manipulates an AI-controlled satellite’s navigation, causing it to collide with a critical communication satellite and disrupting global internet services for millions.\n (Weber & Franke, 2024; Oche et al., 2021; Thangavel et al., 2024; Gal et al., 2020)' },
     { title: '3. Built-in Bias "Inertia"', description: '• AI-powered satellites capture and analyze high-resolution images worldwide without consent or oversight, enabling mass collection, processing, and sale of sensitive data with few safeguards or regulations.\n• These AI systems inherit and amplify biases from training data, causing discriminatory outcomes like misidentification or disproportionate targeting of certain groups via space-based facial recognition.\n• This deepens inequalities and enables unjust surveillance or enforcement actions.\n (Yazici, 2025; Ghamisi et al., 2024; Izzo & Campanile, 2024; Kochupillai, 2021).' },
     { title: '4. Unpredictable Autonomy "Cluster"', description: '• Highly autonomous AI can make rapid, unpredictable and irreversible decisions without human intervention.\n• This unpredictability in high-stakes hinders risk assessment and legal accountability.\n• Humans may be powerless to prevent disasters caused by autonomous AI decisions.\n• Absence of clear, enforceable standards raises issues of compliance, fairness, and protection of fundamental rights.\n (Graham et al., 2024; Thangavel et al., 2024; Gal et al., 2020; Pagallo et al., 2023; Martin & Freeland, 2021).' }
 ];
 
-export function renderProblemGrid(containerId: string, problems: Problem[]) {
+export function renderProblemGrid(containerId, problems) {
     const problemContentContainer = document.getElementById(containerId);
     if (!problemContentContainer) return;
 
-    let activePlanet: number | null = null;
+    let activePlanet = null;
     let showAllPlanets = false;
 
     const keywords = ["Liability", "Security", "Bias", "Autonomy"];
@@ -28,7 +26,7 @@ export function renderProblemGrid(containerId: string, problems: Problem[]) {
         { size: 'w-[28rem] h-[28rem] md:w-[44rem] md:h-[44rem]', duration: '100s', delay: '-25s' },
     ];
 
-    const tooltipContentHTML = (problem: Problem) => `
+    const tooltipContentHTML = (problem) => `
         <h4 class="mb-2 font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">${problem.title}</h4>
         <p class="text-sm text-gray-300 leading-relaxed whitespace-pre-line">${problem.description}</p>
     `;
@@ -95,11 +93,13 @@ export function renderProblemGrid(containerId: string, problems: Problem[]) {
 
     const planets = problemContentContainer.querySelectorAll('.planet-container');
     const gridTooltipsContainer = problemContentContainer.querySelector('#problem-grid-tooltips');
-    const gridTooltips = gridTooltipsContainer.querySelectorAll(':scope > div');
+    const gridTooltips = gridTooltipsContainer ? gridTooltipsContainer.querySelectorAll(':scope > div') : [];
 
-    function toggleAllTooltips(show: boolean) {
+    function toggleAllTooltips(show) {
         showAllPlanets = show;
-        gridTooltipsContainer.classList.toggle('invisible', !show);
+        if (gridTooltipsContainer) {
+            gridTooltipsContainer.classList.toggle('invisible', !show);
+        }
         gridTooltips.forEach(tip => {
             tip.classList.toggle('opacity-100', show);
             tip.classList.toggle('scale-100', show);
@@ -115,8 +115,10 @@ export function renderProblemGrid(containerId: string, problems: Problem[]) {
         planets.forEach(p => {
             p.classList.remove('scale-110');
             p.querySelector('.ping-indicator').classList.add('opacity-0');
-            (p.nextElementSibling as HTMLElement).classList.add('opacity-0', 'scale-95', 'invisible');
-            (p.nextElementSibling as HTMLElement).classList.remove('opacity-100', 'scale-100', 'visible');
+            if (p.nextElementSibling) {
+                p.nextElementSibling.classList.add('opacity-0', 'scale-95', 'invisible');
+                p.nextElementSibling.classList.remove('opacity-100', 'scale-100', 'visible');
+            }
         });
         toggleAllTooltips(!showAllPlanets);
     });
@@ -124,8 +126,8 @@ export function renderProblemGrid(containerId: string, problems: Problem[]) {
     planets.forEach(planet => {
         planet.addEventListener('click', (e) => {
             e.stopPropagation();
-            const index = parseInt((planet as HTMLElement).dataset.index);
-            const tooltip = planet.nextElementSibling as HTMLElement;
+            const index = parseInt(planet.dataset.index, 10);
+            const tooltip = planet.nextElementSibling;
             const ping = planet.querySelector('.ping-indicator');
 
             if (activePlanet === index) {
@@ -137,10 +139,16 @@ export function renderProblemGrid(containerId: string, problems: Problem[]) {
             } else { 
                 if(activePlanet !== null) {
                     const prevPlanet = problemContentContainer.querySelector(`.planet-container[data-index="${activePlanet}"]`);
-                    prevPlanet.classList.remove('scale-110');
-                    prevPlanet.querySelector('.ping-indicator').classList.add('opacity-0');
-                    (prevPlanet.nextElementSibling as HTMLElement).classList.add('opacity-0', 'scale-95', 'invisible');
-                    (prevPlanet.nextElementSibling as HTMLElement).classList.remove('opacity-100', 'scale-100', 'visible');
+                    if (prevPlanet) {
+                        prevPlanet.classList.remove('scale-110');
+                        const prevPing = prevPlanet.querySelector('.ping-indicator');
+                        if (prevPing) prevPing.classList.add('opacity-0');
+                        const prevTooltip = prevPlanet.nextElementSibling;
+                        if (prevTooltip) {
+                            prevTooltip.classList.add('opacity-0', 'scale-95', 'invisible');
+                            prevTooltip.classList.remove('opacity-100', 'scale-100', 'visible');
+                        }
+                    }
                 }
                 activePlanet = index;
                 showAllPlanets = false;
@@ -148,25 +156,31 @@ export function renderProblemGrid(containerId: string, problems: Problem[]) {
 
                 planet.classList.add('scale-110');
                 ping.classList.remove('opacity-0');
-                tooltip.classList.remove('opacity-0', 'scale-95', 'invisible');
-                tooltip.classList.add('opacity-100', 'scale-100', 'visible');
+                if (tooltip) {
+                    tooltip.classList.remove('opacity-0', 'scale-95', 'invisible');
+                    tooltip.classList.add('opacity-100', 'scale-100', 'visible');
+                }
             }
         });
     });
-    
+
     document.body.addEventListener('click', (e) => {
-        if (!problemContentContainer.contains(e.target as Node)) {
+        if (!problemContentContainer.contains(e.target)) {
             toggleAllTooltips(false);
             if(activePlanet !== null) {
                 const prevPlanet = problemContentContainer.querySelector(`.planet-container[data-index="${activePlanet}"]`);
                 if(prevPlanet) {
                     prevPlanet.classList.remove('scale-110');
-                    prevPlanet.querySelector('.ping-indicator').classList.add('opacity-0');
-                    (prevPlanet.nextElementSibling as HTMLElement).classList.add('opacity-0', 'scale-95', 'invisible');
-                    (prevPlanet.nextElementSibling as HTMLElement).classList.remove('opacity-100', 'scale-100', 'visible');
+                    const prevPing = prevPlanet.querySelector('.ping-indicator');
+                    if (prevPing) prevPing.classList.add('opacity-0');
+                    const prevTooltip = prevPlanet.nextElementSibling;
+                    if (prevTooltip) {
+                        prevTooltip.classList.add('opacity-0', 'scale-95', 'invisible');
+                        prevTooltip.classList.remove('opacity-100', 'scale-100', 'visible');
+                    }
                     activePlanet = null;
                 }
             }
-        } 
+        }
     });
 }

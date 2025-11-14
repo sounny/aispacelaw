@@ -1,4 +1,4 @@
-export function renderAnimatedBackground(containerId: string) {
+export function renderAnimatedBackground(containerId) {
     const animatedBg = document.getElementById(containerId);
     if (!animatedBg) return;
 

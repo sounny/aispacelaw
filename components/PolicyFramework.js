@@ -1,4 +1,4 @@
-export function renderPolicyFramework(container: HTMLElement) {
+export function renderPolicyFramework(container) {
     const contentHTML = `
         <div class="relative w-full py-24 overflow-hidden">
             <div class="relative z-10 container mx-auto px-4 flex flex-col items-center">

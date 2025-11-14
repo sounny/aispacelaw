@@ -1,4 +1,4 @@
-export function renderReferencesSection(container: HTMLElement) {
+export function renderReferencesSection(container) {
     const contentHTML = `
         <div class="container mx-auto px-4 max-w-4xl">
         <div id="references-toggle" role="button" tabindex="0" aria-expanded="false" class="flex items-center justify-center mb-8 cursor-pointer group">

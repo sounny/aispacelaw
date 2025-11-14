@@ -1,4 +1,4 @@
-export function renderImplementationSection(container: HTMLElement) {
+export function renderImplementationSection(container) {
     const contentHTML = `
         <div class="relative w-full">
             <div class="w-full bg-[#0c0a1d]/80 border border-purple-500/30 backdrop-blur-md rounded-2xl p-8 shadow-xl shadow-purple-500/5">
